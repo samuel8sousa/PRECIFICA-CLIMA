@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Novo orçamento"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_dark"/>
+
+        <LinearLayout
+            android:id="@+id/etapaUm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="1. Serviço e cliente"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_teal"/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbInstalacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Instalação de Split"
+                    android:checked="true"/>
+
+                <RadioButton
+                    android:id="@+id/rbHigienizacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Higienização preventiva"/>
+
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/edtCliente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Nome do cliente"
+                android:inputType="textPersonName"/>
+
+            <EditText
+                android:id="@+id/edtCep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="CEP do cliente"
+                android:inputType="number"
+                android:maxLength="8"/>
+
+            <EditText
+                android:id="@+id/edtHorasServico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Horas estimadas de execução"
+                android:inputType="numberDecimal"/>
+
+            <Button
+                android:id="@+id/btnContinuar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:text="Continuar"
+                android:backgroundTint="@color/accent_blue"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/etapaDois"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="2. Custos do serviço"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_teal"/>
+
+            <EditText
+                android:id="@+id/edtDistancia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Distância total em km"
+                android:inputType="numberDecimal"/>
+
+            <EditText
+                android:id="@+id/edtMateriais"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Custo dos materiais (R$)"
+                android:inputType="numberDecimal"/>
+
+            <EditText
+                android:id="@+id/edtOutrosCustos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Outros custos (R$)"
+                android:inputType="numberDecimal"/>
+
+            <Button
+                android:id="@+id/btnVoltarEtapa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Voltar"/>
+
+            <Button
+                android:id="@+id/btnCalcular"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:text="Visualizar orçamento"
+                android:backgroundTint="@color/primary_teal"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

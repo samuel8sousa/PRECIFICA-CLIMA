@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Meu perfil financeiro"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_dark"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Configure seus custos e sua meta."
+            android:textColor="@color/text_secondary"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Remuneração mensal desejada"
+            android:textColor="@color/primary_dark"/>
+
+        <EditText
+            android:id="@+id/edtRemuneracao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text="3000"
+            android:hint="Ex.: 3000"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Custos fixos mensais"
+            android:textColor="@color/primary_dark"/>
+
+        <EditText
+            android:id="@+id/edtCustos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text="800"
+            android:hint="Ex.: 800"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Reserva para ferramentas"
+            android:textColor="@color/primary_dark"/>
+
+        <EditText
+            android:id="@+id/edtReserva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text="200"
+            android:hint="Ex.: 200"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Horas faturáveis por mês"
+            android:textColor="@color/primary_dark"/>
+
+        <EditText
+            android:id="@+id/edtHoras"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text="100"
+            android:hint="Ex.: 100"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Custo por quilômetro"
+            android:textColor="@color/primary_dark"/>
+
+        <EditText
+            android:id="@+id/edtCustoKm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text="1.10"
+            android:hint="Ex.: 1.10"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Margem adicional (%)"
+            android:textColor="@color/primary_dark"/>
+
+        <EditText
+            android:id="@+id/edtMargem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text="15"
+            android:hint="Ex.: 15"/>
+
+        <Button
+            android:id="@+id/btnSalvarPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:text="Salvar configurações"
+            android:backgroundTint="@color/primary_teal"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+</ScrollView>

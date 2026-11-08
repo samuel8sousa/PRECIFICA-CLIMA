@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_dark">#10283A</color>
+    <color name="primary_teal">#058E89</color>
+    <color name="primary_teal_dark">#06736F</color>
+
+    <color name="accent_lime">#CDFF68</color>
+    <color name="accent_blue">#425CF3</color>
+
+    <color name="background">#F3F6F8</color>
+    <color name="surface">#FFFFFF</color>
+
+    <color name="text_primary">#10283A</color>
+    <color name="text_secondary">#647A90</color>
+
+    <color name="border">#E5EBEE</color>
+    <color name="teal_soft">#DEF8F2</color>
+    <color name="blue_soft">#E7EAFF</color>
+</resources>
