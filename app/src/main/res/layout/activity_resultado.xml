@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="PREÇO RECOMENDADO"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/surface"
                 android:textSize="13sp"/>
 
             <TextView
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Exemplo com margem de 15%"
-                android:textColor="#FFFFFF"/>
+                android:textColor="@color/surface"/>
 
         </LinearLayout>
 

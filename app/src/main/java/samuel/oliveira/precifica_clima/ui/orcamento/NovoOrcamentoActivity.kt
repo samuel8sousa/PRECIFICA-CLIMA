@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
-
+import android.widget.ImageButton
 import samuel.oliveira.precifica_clima.R
 
 class NovoOrcamentoActivity : AppCompatActivity() {
@@ -18,6 +18,13 @@ class NovoOrcamentoActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_novo_orcamento)
 
+        val btnVoltarTela = findViewById<ImageButton>(
+            R.id.btnVoltarTela
+        )
+
+        btnVoltarTela.setOnClickListener {
+            finish()
+        }
         val etapaUm = findViewById<LinearLayout>(
             R.id.etapaUm
         )

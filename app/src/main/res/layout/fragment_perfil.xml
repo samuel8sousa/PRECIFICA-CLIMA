@@ -12,14 +12,26 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <!-- Título -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Meu perfil financeiro"
             android:textSize="27sp"
             android:textStyle="bold"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
 
+        <!-- Configuração do modo escuro -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchModoEscuro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Ativar modo escuro"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"/>
+
+        <!-- Descrição -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,12 +40,13 @@
             android:textColor="@color/text_secondary"
             android:textSize="15sp"/>
 
+        <!-- Remuneração -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Remuneração mensal desejada"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
 
         <EditText
             android:id="@+id/edtRemuneracao"
@@ -41,14 +54,17 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:text="3000"
-            android:hint="Ex.: 3000"/>
+            android:hint="Ex.: 3000"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"/>
 
+        <!-- Custos fixos -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Custos fixos mensais"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
 
         <EditText
             android:id="@+id/edtCustos"
@@ -56,14 +72,17 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:text="800"
-            android:hint="Ex.: 800"/>
+            android:hint="Ex.: 800"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"/>
 
+        <!-- Reserva para ferramentas -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Reserva para ferramentas"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
 
         <EditText
             android:id="@+id/edtReserva"
@@ -71,14 +90,17 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:text="200"
-            android:hint="Ex.: 200"/>
+            android:hint="Ex.: 200"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"/>
 
+        <!-- Horas faturáveis -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Horas faturáveis por mês"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
 
         <EditText
             android:id="@+id/edtHoras"
@@ -86,14 +108,17 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:text="100"
-            android:hint="Ex.: 100"/>
+            android:hint="Ex.: 100"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"/>
 
+        <!-- Custo por quilômetro -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Custo por quilômetro"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
 
         <EditText
             android:id="@+id/edtCustoKm"
@@ -101,14 +126,17 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:text="1.10"
-            android:hint="Ex.: 1.10"/>
+            android:hint="Ex.: 1.10"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"/>
 
+        <!-- Margem adicional -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Margem adicional (%)"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
 
         <EditText
             android:id="@+id/edtMargem"
@@ -116,8 +144,11 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:text="15"
-            android:hint="Ex.: 15"/>
+            android:hint="Ex.: 15"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"/>
 
+        <!-- Salvar configurações -->
         <Button
             android:id="@+id/btnSalvarPerfil"
             android:layout_width="match_parent"
@@ -125,7 +156,7 @@
             android:layout_marginTop="24dp"
             android:text="Salvar configurações"
             android:backgroundTint="@color/primary_teal"
-            android:textColor="#FFFFFF"/>
+            android:textColor="@color/text_on_teal"/>
 
     </LinearLayout>
 </ScrollView>

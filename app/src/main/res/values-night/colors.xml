@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Cores principais -->
+    <color name="primary_dark">#0B1722</color>
+    <color name="primary_teal">#47C7B9</color>
+    <color name="primary_teal_dark">#2AA99D</color>
+
+    <!-- Cores de destaque -->
+    <color name="accent_lime">#D8FF91</color>
+    <color name="accent_blue">#425CF3</color>
+
+    <!-- Fundos -->
+    <color name="background">#101820</color>
+    <color name="surface">#1B2731</color>
+
+    <!-- Textos -->
+    <color name="text_primary">#F2F5F7</color>
+    <color name="text_secondary">#B7C2CB</color>
+    <color name="text_on_primary">#FFFFFF</color>
+
+    <!-- Bordas e elementos auxiliares -->
+    <color name="border">#34434E</color>
+    <color name="teal_soft">#173A38</color>
+    <color name="blue_soft">#252D50</color>
+
+    <color name="text_on_teal">#0B1722</color>
+</resources>

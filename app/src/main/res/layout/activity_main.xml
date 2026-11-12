@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/background">
 
+    <!-- Cabeçalho -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -16,21 +17,25 @@
         android:text="Precifica Clima"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@color/primary_dark"
+        android:textColor="@color/text_primary"
         android:background="@color/surface"/>
 
+    <!-- Área de conteúdo dos Fragments -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
+    <!-- Navegação inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/surface"
         app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/bottom_nav_item_tint"
+        app:itemTextColor="@color/bottom_nav_item_tint"
         app:menu="@menu/menu_bottom_navigation"/>
 
 </LinearLayout>
