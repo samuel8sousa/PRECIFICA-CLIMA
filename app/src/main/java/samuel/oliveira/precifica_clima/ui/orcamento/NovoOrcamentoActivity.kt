@@ -9,6 +9,8 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageButton
+import android.widget.Toast
+
 import samuel.oliveira.precifica_clima.R
 
 class NovoOrcamentoActivity : AppCompatActivity() {
@@ -84,8 +86,40 @@ class NovoOrcamentoActivity : AppCompatActivity() {
         }
 
         btnCalcular.setOnClickListener {
+            fun lerNumero(id: Int): Double? {
+                return findViewById<EditText>(id)
+                    .text.toString()
+                    .replace(",", ".")
+                    .toDoubleOrNull()
+            }
 
+            val horas = lerNumero(R.id.edtHorasServico)
+            val distancia = lerNumero(R.id.edtDistancia)
+            val materiais = lerNumero(R.id.edtMateriais)
+            val outros = lerNumero(R.id.edtOutrosCustos)
             val cliente = campoCliente.text.toString()
+
+            if (horas == null || !horas.isFinite() || horas <= 0) {
+                Toast.makeText(
+                    this,
+                    "Informe um tempo de execução válido.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            val custos = listOf(distancia, materiais, outros)
+
+            if (custos.any {
+                    it == null || !it.isFinite() || it < 0
+                }) {
+                Toast.makeText(
+                    this,
+                    "Confira distância e custos informados.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
 
             val servico = if (rbInstalacao.isChecked) {
                 "Instalação de Split"
@@ -100,6 +134,15 @@ class NovoOrcamentoActivity : AppCompatActivity() {
 
             intent.putExtra("CLIENTE", cliente)
             intent.putExtra("SERVICO", servico)
+            intent.putExtra(
+                "CEP",
+                findViewById<EditText>(R.id.edtCep).text.toString()
+            )
+
+            intent.putExtra("HORAS", horas)
+            intent.putExtra("DISTANCIA", distancia!!)
+            intent.putExtra("MATERIAIS", materiais!!)
+            intent.putExtra("OUTROS", outros!!)
 
             startActivity(intent)
         }

@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/background">
 
     <LinearLayout
@@ -11,38 +12,50 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <!-- 1. TÍTULO PRINCIPAL -->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Seu preço, sem achismo."
             android:textSize="27sp"
             android:textStyle="bold"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
+
+        <!-- 2. DESCRIÇÃO -->
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Prévia visual com valores ilustrativos"
+            android:text="Confira os custos e o preço recomendado para este serviço."
+            android:textSize="14sp"
             android:textColor="@color/text_secondary"/>
+
+        <!-- 3. CLIENTE -->
 
         <TextView
             android:id="@+id/txtResultadoCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Cliente"
+            android:text="Nome do cliente"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/primary_dark"/>
+            android:textColor="@color/text_primary"/>
+
+        <!-- 4. TIPO DE SERVIÇO -->
 
         <TextView
             android:id="@+id/txtResultadoServico"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Serviço"
+            android:text="Tipo de serviço"
+            android:textSize="14sp"
             android:textColor="@color/text_secondary"/>
+
+        <!-- 5. CARD: COMPOSIÇÃO DOS CUSTOS -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,44 +68,70 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="COMPOSIÇÃO DEMONSTRATIVA"
+                android:text="COMPOSIÇÃO DO PREÇO"
                 android:textStyle="bold"
-                android:textColor="@color/primary_dark"/>
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <!-- Mão de obra -->
 
             <TextView
+                android:id="@+id/txtMaoObra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Mão de obra: R$ 140,00"/>
+                android:text="Mão de obra: --"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <!-- Materiais -->
 
             <TextView
+                android:id="@+id/txtMateriaisResultado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Materiais: R$ 220,00"/>
+                android:text="Materiais: --"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <!-- Deslocamento -->
 
             <TextView
+                android:id="@+id/txtDeslocamentoResultado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Deslocamento: R$ 26,40"/>
+                android:text="Deslocamento: --"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <!-- Outros custos -->
 
             <TextView
+                android:id="@+id/txtOutrosResultado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Outros custos: R$ 20,00"/>
+                android:text="Outros custos: --"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <!-- Custo total -->
 
             <TextView
+                android:id="@+id/txtCustoTotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Custo total: R$ 406,40"
+                android:text="Custo total: --"
                 android:textStyle="bold"
                 android:textSize="18sp"
-                android:textColor="@color/primary_dark"/>
+                android:textColor="@color/text_primary"/>
 
         </LinearLayout>
+
+        <!-- 6. CARD: PREÇO RECOMENDADO -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,37 +141,52 @@
             android:padding="24dp"
             android:background="@drawable/bg_hero">
 
+            <!-- Título do resultado -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="PREÇO RECOMENDADO"
-                android:textColor="@color/surface"
+                android:textColor="@android:color/white"
                 android:textSize="13sp"/>
 
+            <!-- Valor calculado -->
+
             <TextView
+                android:id="@+id/txtPrecoRecomendado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="R$ 478,12"
+                android:text="R$ --"
                 android:textSize="36sp"
                 android:textStyle="bold"
                 android:textColor="@color/accent_lime"/>
 
+            <!-- Margem utilizada -->
+
             <TextView
+                android:id="@+id/txtMargemResultado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Exemplo com margem de 15%"
-                android:textColor="@color/surface"/>
+                android:text="Margem aplicada: --"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"/>
 
         </LinearLayout>
+
+        <!-- 7. BOTÃO VOLTAR -->
 
         <Button
             android:id="@+id/btnEditarOrcamento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Voltar ao formulário"/>
+            android:text="Voltar ao formulário"
+            android:backgroundTint="@color/blue_soft"
+            android:textColor="@color/text_primary"/>
+
+        <!-- 8. BOTÃO SALVAR -->
 
         <Button
             android:id="@+id/btnSalvarOrcamento"
@@ -140,7 +194,9 @@
             android:layout_height="56dp"
             android:layout_marginTop="12dp"
             android:text="Salvar orçamento"
-            android:backgroundTint="@color/primary_teal"/>
+            android:backgroundTint="@color/primary_teal"
+            android:textColor="@color/text_on_teal"/>
 
     </LinearLayout>
+
 </ScrollView>

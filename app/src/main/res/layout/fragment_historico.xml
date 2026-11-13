@@ -24,6 +24,17 @@
         android:text="Consulte os serviços já orçados."
         android:textSize="15sp"
         android:textColor="@color/text_secondary"/>
+    <!-- 3. MENSAGEM QUANDO NÃO HOUVER ORÇAMENTOS -->
+    <TextView
+        android:id="@+id/txtHistoricoVazio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="Você ainda não possui orçamentos.\nCrie seu primeiro orçamento para começar!"
+        android:textSize="15sp"
+        android:textColor="@color/text_secondary"
+        android:visibility="gone"/>
 
     <!-- Lista de orçamentos -->
     <androidx.recyclerview.widget.RecyclerView
