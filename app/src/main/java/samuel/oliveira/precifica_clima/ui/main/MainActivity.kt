@@ -79,6 +79,15 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             mostrarFragment(InicioFragment())
         }
+
+
+// Abre a aba Início após salvar um orçamento
+        if (intent.getBooleanExtra("ABRIR_INICIO", false)) {
+
+            findViewById<BottomNavigationView>(
+                R.id.bottomNavigation
+            ).selectedItemId = R.id.nav_inicio
+        }
     }
 
     private fun mostrarFragment(fragment: Fragment) {

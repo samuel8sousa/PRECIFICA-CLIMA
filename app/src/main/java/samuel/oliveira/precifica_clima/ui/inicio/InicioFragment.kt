@@ -1,4 +1,3 @@
-
 package samuel.oliveira.precifica_clima.ui.inicio
 
 import android.content.Intent
@@ -26,9 +25,9 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ======================================
-        // 1. LOCALIZAR OS BOTÕES
-        // ======================================
+        // ==========================================
+        // 1. IDENTIFICAR BOTÕES PRINCIPAIS
+        // ==========================================
 
         val btnNovo = view.findViewById<Button>(
             R.id.btnNovoOrcamento
@@ -38,38 +37,89 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
             R.id.btnAjustarPerfil
         )
 
-        // ======================================
-        // 2. ABRIR A TELA DE NOVO ORÇAMENTO
-        // ======================================
+        // ==========================================
+        // 2. IDENTIFICAR SERVIÇOS DISPONÍVEIS
+        // ==========================================
 
-        btnNovo.setOnClickListener {
+        val cardInstalacao = view.findViewById<View>(
+            R.id.cardServicoInstalacao
+        )
+
+        val cardHigienizacao = view.findViewById<View>(
+            R.id.cardServicoHigienizacao
+        )
+
+        // ==========================================
+        // 3. FUNÇÃO PARA ABRIR NOVO ORÇAMENTO
+        // ==========================================
+
+        fun abrirNovoOrcamento(servico: String? = null) {
 
             val intent = Intent(
                 requireContext(),
                 NovoOrcamentoActivity::class.java
             )
 
+            // Envia o serviço escolhido, quando existir
+            if (servico != null) {
+                intent.putExtra(
+                    "SERVICO_PRESELECIONADO",
+                    servico
+                )
+            }
+
             startActivity(intent)
         }
 
-        // ======================================
-        // 3. ABRIR A TELA DE PERFIL
-        // ======================================
+        // ==========================================
+        // 4. BOTÃO NOVO ORÇAMENTO
+        // ==========================================
+
+        btnNovo.setOnClickListener {
+
+            // Abre com a seleção padrão
+            abrirNovoOrcamento()
+        }
+
+        // ==========================================
+        // 5. BOTÃO AJUSTAR PERFIL
+        // ==========================================
 
         btnPerfil.setOnClickListener {
 
-            val navigation = requireActivity()
+            requireActivity()
                 .findViewById<BottomNavigationView>(
                     R.id.bottomNavigation
                 )
+                .selectedItemId = R.id.nav_perfil
+        }
 
-            navigation.selectedItemId = R.id.nav_perfil
+        // ==========================================
+        // 6. SERVIÇO: INSTALAÇÃO DE SPLIT
+        // ==========================================
+
+        cardInstalacao.setOnClickListener {
+
+            abrirNovoOrcamento(
+                "Instalação de Split"
+            )
+        }
+
+        // ==========================================
+        // 7. SERVIÇO: HIGIENIZAÇÃO PREVENTIVA
+        // ==========================================
+
+        cardHigienizacao.setOnClickListener {
+
+            abrirNovoOrcamento(
+                "Higienização preventiva"
+            )
         }
     }
 
-    // ======================================
-    // 4. ATUALIZAR AO RETORNAR PARA O INÍCIO
-    // ======================================
+    // ==========================================
+    // 8. ATUALIZAR INFORMAÇÕES FINANCEIRAS
+    // ==========================================
 
     override fun onResume() {
         super.onResume()
@@ -78,10 +128,6 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
 
         atualizarIndicadores(tela)
     }
-
-    // ======================================
-    // 5. CONSULTAR OS DADOS SALVOS
-    // ======================================
 
     private fun atualizarIndicadores(tela: View) {
 
@@ -93,19 +139,18 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
             Locale.forLanguageTag("pt-BR")
         )
 
-        // Evita divisão por zero
-        val valorHora = if (perfil.horasFaturaveis > 0) {
+        val valorHora = if (
+            perfil.horasFaturaveis > 0
+        ) {
             perfil.calcularCustoHora()
         } else {
             0.0
         }
 
-        // Atualiza o custo da hora
         tela.findViewById<TextView>(
             R.id.txtValorHora
         ).text = "${moeda.format(valorHora)}/h"
 
-        // Atualiza a meta mensal
         tela.findViewById<TextView>(
             R.id.txtMetaMensal
         ).text = "Meta mensal: ${moeda.format(perfil.remuneracao)}"

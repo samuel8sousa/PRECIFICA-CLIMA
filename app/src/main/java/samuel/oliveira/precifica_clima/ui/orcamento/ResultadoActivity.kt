@@ -10,11 +10,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 import java.text.NumberFormat
 import java.util.Locale
-
+import android.content.Intent
+import samuel.oliveira.precifica_clima.ui.main.MainActivity
 import samuel.oliveira.precifica_clima.R
 import samuel.oliveira.precifica_clima.data.local.AppDatabase
 import samuel.oliveira.precifica_clima.data.local.entity.OrcamentoEntity
@@ -35,22 +37,51 @@ class ResultadoActivity : AppCompatActivity() {
         val cliente = intent.getStringExtra("CLIENTE") ?: ""
         val servico = intent.getStringExtra("SERVICO") ?: ""
         val cep = intent.getStringExtra("CEP") ?: ""
+        val numero = intent.getStringExtra("NUMERO") ?: ""
 
         val horas = intent.getDoubleExtra(
-            "HORAS", Double.NaN
+            "HORAS",
+            Double.NaN
         )
 
         val distancia = intent.getDoubleExtra(
-            "DISTANCIA", Double.NaN
+            "DISTANCIA",
+            Double.NaN
         )
 
         val materiais = intent.getDoubleExtra(
-            "MATERIAIS", Double.NaN
+            "MATERIAIS",
+            Double.NaN
         )
 
         val outros = intent.getDoubleExtra(
-            "OUTROS", Double.NaN
+            "OUTROS",
+            Double.NaN
         )
+
+        // Dados recebidos da consulta ViaCEP
+        val logradouro =
+            intent.getStringExtra("LOGRADOURO") ?: ""
+
+        val complemento =
+            intent.getStringExtra("COMPLEMENTO") ?: ""
+
+        val bairro =
+            intent.getStringExtra("BAIRRO") ?: ""
+
+        val cidade =
+            intent.getStringExtra("CIDADE") ?: ""
+
+        val uf =
+            intent.getStringExtra("UF") ?: ""
+
+        // ID usado para identificar uma edição
+        val orcamentoId = intent.getLongExtra(
+            "ORCAMENTO_ID",
+            -1L
+        )
+
+        val modoEdicao = orcamentoId != -1L
 
         // ==========================================
         // 2. VALIDAR OS DADOS RECEBIDOS
@@ -67,6 +98,7 @@ class ResultadoActivity : AppCompatActivity() {
             servico.isBlank() ||
             !valoresValidos
         ) {
+
             Toast.makeText(
                 this,
                 "Dados do orçamento inválidos.",
@@ -99,6 +131,7 @@ class ResultadoActivity : AppCompatActivity() {
                     perfil.margemPercentual < 100
 
         if (!perfilValido) {
+
             Toast.makeText(
                 this,
                 "Confira as configurações do perfil financeiro.",
@@ -125,6 +158,7 @@ class ResultadoActivity : AppCompatActivity() {
             !resultado.custoTotal.isFinite() ||
             !resultado.precoRecomendado.isFinite()
         ) {
+
             Toast.makeText(
                 this,
                 "Não foi possível calcular este orçamento.",
@@ -145,13 +179,12 @@ class ResultadoActivity : AppCompatActivity() {
             localeBrasil
         )
 
-        // Função auxiliar para preencher TextViews
         fun preencher(id: Int, texto: String) {
             findViewById<TextView>(id).text = texto
         }
 
         // ==========================================
-        // 6. MOSTRAR O CLIENTE E O SERVIÇO
+        // 6. MOSTRAR CLIENTE E SERVIÇO
         // ==========================================
 
         preencher(
@@ -203,7 +236,7 @@ class ResultadoActivity : AppCompatActivity() {
         )
 
         // ==========================================
-        // 9. MOSTRAR A MARGEM UTILIZADA
+        // 9. MOSTRAR A MARGEM
         // ==========================================
 
         preencher(
@@ -216,7 +249,7 @@ class ResultadoActivity : AppCompatActivity() {
         )
 
         // ==========================================
-        // 10. CONFIGURAR O BOTÃO VOLTAR
+        // 10. BOTÃO PARA VOLTAR AO FORMULÁRIO
         // ==========================================
 
         val btnEditar = findViewById<Button>(
@@ -235,15 +268,31 @@ class ResultadoActivity : AppCompatActivity() {
             R.id.btnSalvarOrcamento
         )
 
+        // Personaliza o texto quando for uma edição
+        btnSalvar.text = if (modoEdicao) {
+            "Salvar alterações"
+        } else {
+            "Salvar orçamento"
+        }
+
         btnSalvar.setOnClickListener {
 
             // Impede vários cliques simultâneos
             btnSalvar.isEnabled = false
 
-            // Cria o registro que será salvo no Room
+            // ======================================
+            // 12. CRIAR O REGISTRO DO ORÇAMENTO
+            // ======================================
+
             val orcamento = OrcamentoEntity(
                 cliente = cliente,
                 cep = cep,
+                logradouro = logradouro,
+                numero = numero,
+                complemento = complemento,
+                bairro = bairro,
+                cidade = cidade,
+                uf = uf,
                 servico = servico,
                 horas = horas,
                 distanciaKm = distancia,
@@ -257,37 +306,100 @@ class ResultadoActivity : AppCompatActivity() {
                 precoRecomendado = resultado.precoRecomendado
             )
 
-            // Inicia o salvamento com corrotina
+            // ======================================
+            // 13. SALVAR OU ATUALIZAR NO ROOM
+            // ======================================
+
             lifecycleScope.launch {
 
                 try {
+
                     val banco = AppDatabase.getDatabase(
                         applicationContext
                     )
 
-                    banco.orcamentoDao().inserir(orcamento)
+                    val dao = banco.orcamentoDao()
 
-                    Toast.makeText(
+                    if (!modoEdicao) {
+
+                        // --------------------------
+                        // NOVO ORÇAMENTO
+                        // --------------------------
+
+                        dao.inserir(orcamento)
+
+                        Toast.makeText(
+                            this@ResultadoActivity,
+                            "Orçamento salvo com sucesso!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    } else {
+
+                        // --------------------------
+                        // EDITAR ORÇAMENTO EXISTENTE
+                        // --------------------------
+
+                        // Recupera o registro original
+                        val original = dao.buscarPorId(
+                            orcamentoId
+                        ) ?: throw IllegalStateException(
+                            "Orçamento não encontrado para edição."
+                        )
+
+                        // Atualiza os dados, preservando
+                        // o ID e a data de criação
+                        val orcamentoAtualizado = orcamento.copy(
+                            id = original.id,
+                            criadoEm = original.criadoEm
+                        )
+
+                        dao.atualizar(orcamentoAtualizado)
+
+                        Toast.makeText(
+                            this@ResultadoActivity,
+                            "Orçamento atualizado com sucesso!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    // ==========================================
+                    // VOLTAR AO MENU PRINCIPAL APÓS SALVAR
+                    // ==========================================
+
+                    val intentInicio = Intent(
                         this@ResultadoActivity,
-                        "Orçamento salvo com sucesso!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        MainActivity::class.java
+                    ).apply {
 
+                        // Limpa as telas anteriores do orçamento
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                        // Informa que deve abrir a aba Início
+                        putExtra("ABRIR_INICIO", true)
+                    }
+
+                    startActivity(intentInicio)
                     finish()
+
+                } catch (e: CancellationException) {
+                    throw e
 
                 } catch (e: Exception) {
 
                     Log.e(
                         "ResultadoActivity",
-                        "Erro ao salvar orçamento no Room",
+                        "Erro ao salvar ou atualizar orçamento no Room",
                         e
                     )
 
+                    // Permite tentar novamente
                     btnSalvar.isEnabled = true
 
                     Toast.makeText(
                         this@ResultadoActivity,
-                        "Erro ao salvar orçamento.",
+                        "Erro ao salvar o orçamento.",
                         Toast.LENGTH_LONG
                     ).show()
                 }

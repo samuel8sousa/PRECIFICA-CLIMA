@@ -24,10 +24,13 @@ interface OrcamentoDao {
     suspend fun buscarPorId(id: Long): OrcamentoEntity?
 
     @Update
-    suspend fun atualizar(orcamento: OrcamentoEntity)
+    suspend fun atualizar(orcamento: OrcamentoEntity): Int
 
     @Delete
     suspend fun excluir(orcamento: OrcamentoEntity)
+
+    @Query("DELETE FROM orcamentos")
+    suspend fun excluirTodos(): Int
 }
 
 

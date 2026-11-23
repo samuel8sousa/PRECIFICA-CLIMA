@@ -36,4 +36,63 @@
         android:textColor="@color/primary_teal"
         android:textSize="22sp"/>
 
+
+    <!-- BOTÕES DE AÇÃO DO ORÇAMENTO -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- BOTÃO EDITAR -->
+        <Button
+            android:id="@+id/btnEditar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:text="Editar"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            android:textColor="@color/text_on_teal"
+            android:backgroundTint="@color/primary_teal"/>
+
+        <!-- BOTÃO VER ROTA -->
+        <Button
+            android:id="@+id/btnVerRota"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:text="Ver rota"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            android:textColor="@color/text_on_teal"
+            android:backgroundTint="@color/primary_teal"/>
+
+    </LinearLayout>
+    <!-- COMPARTILHAR ORÇAMENTO -->
+    <Button
+        android:id="@+id/btnCompartilhar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="Enviar pelo WhatsApp"
+        android:textAllCaps="false"
+        android:textSize="13sp"
+        android:textColor="@color/text_on_teal"
+        android:backgroundTint="@color/primary_teal"/>
+
+    <!-- EXCLUIR ORÇAMENTO -->
+    <Button
+        android:id="@+id/btnExcluir"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="Excluir orçamento"
+        android:textAllCaps="false"
+        android:textSize="13sp"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#B3261E"/>
 </LinearLayout>

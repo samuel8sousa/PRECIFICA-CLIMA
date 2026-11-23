@@ -27,7 +27,14 @@ data class OrcamentoEntity(
     val margemPercentual: Double,
     val precoRecomendado: Double,
 
-    val criadoEm: Long = System.currentTimeMillis()
+    val criadoEm: Long = System.currentTimeMillis(),
+
+    val logradouro: String = "",
+    val numero: String = "",
+    val complemento: String = "",
+    val bairro: String = "",
+    val cidade: String = "",
+    val uf: String = ""
 )
 
 
