@@ -34,7 +34,11 @@ data class OrcamentoEntity(
     val complemento: String = "",
     val bairro: String = "",
     val cidade: String = "",
-    val uf: String = ""
-)
+    val uf: String = "",
+
+    val valorRecebido: Double = 0.0,
+    val dataRecebimento: Long? = null
+
+    )
 
 

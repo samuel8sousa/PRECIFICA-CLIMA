@@ -30,7 +30,7 @@ import samuel.oliveira.precifica_clima.ui.orcamento.NovoOrcamentoActivity
 class HistoricoFragment : Fragment(R.layout.fragment_historico) {
 
     // ==========================================
-    // 1. CONFIGURAR A TELA DO HISTÓRICO
+    // 1. CONFIGURAR A TELA
     // ==========================================
 
     override fun onViewCreated(
@@ -46,7 +46,6 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
         recycler.layoutManager =
             LinearLayoutManager(requireContext())
 
-        // Botão para limpar todo o histórico
         val btnLimparHistorico = view.findViewById<Button>(
             R.id.btnLimparHistorico
         )
@@ -57,7 +56,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
     }
 
     // ==========================================
-    // 2. ATUALIZAR AO RETORNAR AO HISTÓRICO
+    // 2. ATUALIZAR AO RETORNAR À TELA
     // ==========================================
 
     override fun onResume() {
@@ -66,7 +65,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
     }
 
     // ==========================================
-    // 3. CARREGAR ORÇAMENTOS DO ROOM
+    // 3. CARREGAR ORÇAMENTOS
     // ==========================================
 
     private fun carregarOrcamentos() {
@@ -88,28 +87,26 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
         viewLifecycleOwner.lifecycleScope.launch {
 
             try {
+
                 val dao = AppDatabase
                     .getDatabase(requireContext())
                     .orcamentoDao()
 
                 val registros = dao.listar()
 
-                // Exibir mensagem se não houver orçamentos
-                mensagem.visibility = if (registros.isEmpty()) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+                mensagem.visibility =
+                    if (registros.isEmpty()) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
 
-                // Desabilitar limpeza se o histórico estiver vazio
                 btnLimpar.isEnabled = registros.isNotEmpty()
 
-                // Formatar valores em reais
                 val moeda = NumberFormat.getCurrencyInstance(
                     Locale.forLanguageTag("pt-BR")
                 )
 
-                // Converter registros do banco em cards
                 val orcamentos = registros.map { item ->
 
                     OrcamentoResumo(
@@ -118,12 +115,13 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                         servico = item.servico,
                         valor = moeda.format(
                             item.precoRecomendado
-                        )
+                        ),
+                        recebido = item.dataRecebimento != null
                     )
                 }
 
                 // ==================================
-                // 4. CONFIGURAR O ADAPTER
+                // 4. CONFIGURAR ADAPTER
                 // ==================================
 
                 recycler.adapter = OrcamentoAdapter(
@@ -137,10 +135,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                             NovoOrcamentoActivity::class.java
                         )
 
-                        intent.putExtra(
-                            "ORCAMENTO_ID",
-                            id
-                        )
+                        intent.putExtra("ORCAMENTO_ID", id)
 
                         startActivity(intent)
                     },
@@ -155,9 +150,17 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                         compartilharOrcamento(id)
                     },
 
-                    // EXCLUIR UM ORÇAMENTO
+                    // EXCLUIR
                     onExcluirClick = { id ->
                         confirmarExclusao(id)
+                    },
+
+                    // REGISTRAR OU DESFAZER RECEBIMENTO
+                    onRecebimentoClick = { id, jaRecebido ->
+                        confirmarAlteracaoRecebimento(
+                            id,
+                            jaRecebido
+                        )
                     }
                 )
 
@@ -182,7 +185,126 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
     }
 
     // ==========================================
-    // 5. ABRIR ROTA ATÉ O CLIENTE
+    // 5. CONFIRMAR RECEBIMENTO
+    // ==========================================
+
+    private fun confirmarAlteracaoRecebimento(
+        id: Long,
+        jaRecebido: Boolean
+    ) {
+
+        val titulo =
+            if (jaRecebido) {
+                "Desfazer recebimento?"
+            } else {
+                "Confirmar pagamento?"
+            }
+
+        val mensagem =
+            if (jaRecebido) {
+                "O recebimento será removido do relatório mensal. Deseja continuar?"
+            } else {
+                "O pagamento integral do valor recomendado será registrado com a data de hoje. Deseja continuar?"
+            }
+
+        val acao =
+            if (jaRecebido) {
+                "Desfazer"
+            } else {
+                "Confirmar"
+            }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(titulo)
+            .setMessage(mensagem)
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton(acao) { _, _ ->
+
+                alterarRecebimento(
+                    id,
+                    jaRecebido
+                )
+            }
+            .show()
+    }
+
+    // ==========================================
+    // 6. ALTERAR STATUS DO RECEBIMENTO
+    // ==========================================
+
+    private fun alterarRecebimento(
+        id: Long,
+        jaRecebido: Boolean
+    ) {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            try {
+
+                val dao = AppDatabase
+                    .getDatabase(requireContext())
+                    .orcamentoDao()
+
+                val alterados = if (jaRecebido) {
+
+                    dao.desfazerRecebimento(id)
+
+                } else {
+
+                    dao.marcarComoRecebido(
+                        id,
+                        System.currentTimeMillis()
+                    )
+                }
+
+                if (alterados > 0) {
+
+                    val mensagem =
+                        if (jaRecebido) {
+                            "Recebimento desfeito."
+                        } else {
+                            "Pagamento registrado com sucesso!"
+                        }
+
+                    Toast.makeText(
+                        requireContext(),
+                        mensagem,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                } else {
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Não foi possível atualizar o recebimento.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                carregarOrcamentos()
+
+            } catch (e: CancellationException) {
+                throw e
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "HistoricoFragment",
+                    "Erro ao atualizar recebimento",
+                    e
+                )
+
+                Toast.makeText(
+                    requireContext(),
+                    "Erro ao atualizar pagamento.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    // ==========================================
+    // 7. ABRIR ROTA ATÉ O CLIENTE
     // ==========================================
 
     private fun abrirRota(id: Long) {
@@ -190,6 +312,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
         viewLifecycleOwner.lifecycleScope.launch {
 
             try {
+
                 val dao = AppDatabase
                     .getDatabase(requireContext())
                     .orcamentoDao()
@@ -207,7 +330,6 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                     return@launch
                 }
 
-                // Validar endereço
                 if (
                     orcamento.logradouro.isBlank() ||
                     orcamento.cidade.isBlank() ||
@@ -223,8 +345,11 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                     return@launch
                 }
 
+                // Inclui o número da residência
                 val destino = listOf(
                     orcamento.logradouro,
+                    orcamento.numero,
+                    orcamento.complemento,
                     orcamento.bairro,
                     orcamento.cidade,
                     orcamento.uf,
@@ -257,7 +382,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
     }
 
     // ==========================================
-    // 6. ABRIR GOOGLE MAPS
+    // 8. ABRIR GOOGLE MAPS
     // ==========================================
 
     private fun abrirGoogleMaps(destino: String) {
@@ -272,7 +397,6 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
             .appendQueryParameter("dir_action", "navigate")
             .build()
 
-        // Tentar abrir o aplicativo Google Maps
         val intentMaps = Intent(
             Intent.ACTION_VIEW,
             uri
@@ -286,13 +410,13 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
 
         } catch (e: ActivityNotFoundException) {
 
-            // Tentar abrir pelo navegador
             val intentNavegador = Intent(
                 Intent.ACTION_VIEW,
                 uri
             )
 
             try {
+
                 startActivity(intentNavegador)
 
             } catch (erro: ActivityNotFoundException) {
@@ -307,7 +431,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
     }
 
     // ==========================================
-    // 7. COMPARTILHAR ORÇAMENTO
+    // 9. COMPARTILHAR ORÇAMENTO
     // ==========================================
 
     private fun compartilharOrcamento(id: Long) {
@@ -315,6 +439,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
         viewLifecycleOwner.lifecycleScope.launch {
 
             try {
+
                 val dao = AppDatabase
                     .getDatabase(requireContext())
                     .orcamentoDao()
@@ -336,7 +461,6 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                     Locale.forLanguageTag("pt-BR")
                 )
 
-                // Apenas informações importantes para o cliente
                 val mensagem = buildString {
 
                     appendLine("🔧 *ORÇAMENTO - PRECIFICA CLIMA*")
@@ -348,18 +472,12 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
 
                     appendLine()
 
-                    appendLine(
-                        "*Cliente:* ${orcamento.cliente}"
-                    )
-
-                    appendLine(
-                        "*Serviço:* ${orcamento.servico}"
-                    )
+                    appendLine("*Cliente:* ${orcamento.cliente}")
+                    appendLine("*Serviço:* ${orcamento.servico}")
 
                     appendLine()
 
                     appendLine("━━━━━━━━━━━━━━━━")
-
                     appendLine("*VALOR TOTAL DO SERVIÇO:*")
 
                     appendLine(
@@ -377,7 +495,6 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                     )
                 }
 
-                // Compartilhamento nativo do Android
                 val intentCompartilhar = Intent(
                     Intent.ACTION_SEND
                 ).apply {
@@ -418,7 +535,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
     }
 
     // ==========================================
-    // 8. CONFIRMAR EXCLUSÃO INDIVIDUAL
+    // 10. CONFIRMAR EXCLUSÃO INDIVIDUAL
     // ==========================================
 
     private fun confirmarExclusao(id: Long) {
@@ -435,6 +552,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                 viewLifecycleOwner.lifecycleScope.launch {
 
                     try {
+
                         val dao = AppDatabase
                             .getDatabase(requireContext())
                             .orcamentoDao()
@@ -452,7 +570,6 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                             return@launch
                         }
 
-                        // Excluir somente o registro selecionado
                         dao.excluir(orcamento)
 
                         Toast.makeText(
@@ -461,7 +578,6 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        // Atualizar o RecyclerView
                         carregarOrcamentos()
 
                     } catch (e: CancellationException) {
@@ -487,7 +603,7 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
     }
 
     // ==========================================
-    // 9. CONFIRMAR LIMPEZA DO HISTÓRICO
+    // 11. LIMPAR TODO O HISTÓRICO
     // ==========================================
 
     private fun confirmarLimpezaHistorico() {
@@ -504,11 +620,11 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                 viewLifecycleOwner.lifecycleScope.launch {
 
                     try {
+
                         val dao = AppDatabase
                             .getDatabase(requireContext())
                             .orcamentoDao()
 
-                        // Excluir todos os registros
                         val quantidade = dao.excluirTodos()
 
                         Toast.makeText(
@@ -517,7 +633,6 @@ class HistoricoFragment : Fragment(R.layout.fragment_historico) {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        // Atualizar a lista e a mensagem de vazio
                         carregarOrcamentos()
 
                     } catch (e: CancellationException) {

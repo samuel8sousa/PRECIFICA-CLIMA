@@ -20,7 +20,7 @@
         android:textColor="@color/text_primary"
         android:background="@color/surface"/>
 
-    <!-- Área de conteúdo dos Fragments -->
+    <!-- Área dos Fragments -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"

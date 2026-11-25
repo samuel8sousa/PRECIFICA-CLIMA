@@ -1,4 +1,3 @@
-
 package samuel.oliveira.precifica_clima.ui.orcamento
 
 import android.content.Intent
@@ -18,6 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
+import android.text.TextWatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import samuel.oliveira.precifica_clima.R
 import samuel.oliveira.precifica_clima.data.local.AppDatabase
 import samuel.oliveira.precifica_clima.data.remote.viacep.RetrofitClient
@@ -27,6 +29,12 @@ class NovoOrcamentoActivity : AppCompatActivity() {
     // -1L = novo orçamento
     // Outro ID = edição de orçamento existente
     private var orcamentoId: Long = -1L
+
+    private var ultimoCepConsultado: String? = null
+
+    private var consultaCepJob: Job? = null
+
+    private var preenchendoDadosSalvos = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -265,9 +273,11 @@ class NovoOrcamentoActivity : AppCompatActivity() {
                     // ENDEREÇO
                     // ------------------------------
 
-                    campoCep.setText(
-                        orcamento.cep
-                    )
+                    preenchendoDadosSalvos = true
+
+                    campoCep.setText(orcamento.cep)
+
+                    preenchendoDadosSalvos = false
 
                     campoLogradouro.setText(
                         orcamento.logradouro
@@ -771,6 +781,7 @@ class NovoOrcamentoActivity : AppCompatActivity() {
     // 16. CONSULTAR ENDEREÇO PELO VIACEP
     // ==========================================
 
+
     private fun configurarBuscaCep() {
 
         val campoCep = findViewById<EditText>(
@@ -797,58 +808,79 @@ class NovoOrcamentoActivity : AppCompatActivity() {
             R.id.edtUf
         )
 
-        val btnBuscar = findViewById<Button>(
-            R.id.btnBuscarCep
-        )
+        campoCep.addTextChangedListener(object : TextWatcher {
 
-        btnBuscar.setOnClickListener {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {}
 
-            val cep = campoCep.text
-                .toString()
-                .filter { it.isDigit() }
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
 
-            if (cep.length != 8) {
+                // Não consultar ao carregar dados antigos
+                if (preenchendoDadosSalvos) return
 
-                campoCep.error =
-                    "Informe um CEP com 8 dígitos"
+                val cep = s.toString()
+                    .filter { it.isDigit() }
 
-                campoCep.requestFocus()
+                // Ainda não completou os 8 dígitos
+                if (cep.length != 8) {
 
-                return@setOnClickListener
-            }
+                    ultimoCepConsultado = null
 
-            // Impedir consultas duplicadas
-            btnBuscar.isEnabled = false
+                    consultaCepJob?.cancel()
 
-            lifecycleScope.launch {
+                    return
+                }
 
-                try {
+                // Evitar consultar o mesmo CEP novamente
+                if (cep == ultimoCepConsultado) return
 
-                    val endereco = RetrofitClient
-                        .viaCepApi
-                        .consultarCep(cep)
+                ultimoCepConsultado = cep
 
-                    // Conferir se o CEP não mudou
-                    // durante a requisição
-                    val cepAtual = campoCep.text
-                        .toString()
-                        .filter { it.isDigit() }
+                consultaCepJob?.cancel()
 
-                    if (cepAtual != cep) {
-                        return@launch
-                    }
+                consultaCepJob = lifecycleScope.launch {
 
-                    if (endereco.erro == true) {
+                    // Pequeno intervalo antes da consulta
+                    delay(300)
 
-                        Toast.makeText(
-                            this@NovoOrcamentoActivity,
-                            "CEP não encontrado.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    try {
 
-                    } else {
+                        val endereco = RetrofitClient
+                            .viaCepApi
+                            .consultarCep(cep)
 
-                        // Preencher endereço encontrado
+                        // Verifica se o CEP continua o mesmo
+                        val cepAtual = campoCep.text
+                            .toString()
+                            .filter { it.isDigit() }
+
+                        if (cepAtual != cep) return@launch
+
+                        if (endereco.erro == true) {
+
+                            campoCep.error = "CEP não encontrado"
+
+                            ultimoCepConsultado = null
+
+                            Toast.makeText(
+                                this@NovoOrcamentoActivity,
+                                "CEP não encontrado.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            return@launch
+                        }
+
+                        // Preencher endereço automaticamente
                         campoLogradouro.setText(
                             endereco.logradouro.orEmpty()
                         )
@@ -869,39 +901,48 @@ class NovoOrcamentoActivity : AppCompatActivity() {
                             endereco.uf.orEmpty()
                         )
 
-                        // O ViaCEP não informa o número
-                        // do imóvel. Esse campo permanece
-                        // para preenchimento manual.
-
                         Toast.makeText(
                             this@NovoOrcamentoActivity,
-                            "Endereço encontrado! Informe o número.",
+                            "Endereço preenchido automaticamente!",
                             Toast.LENGTH_SHORT
                         ).show()
+
+                        // O número da residência continua
+                        // sendo preenchido manualmente.
+
+                    } catch (e: CancellationException) {
+
+                        throw e
+
+                    } catch (e: Exception) {
+
+                        Log.e(
+                            "NovoOrcamentoActivity",
+                            "Erro ao consultar CEP",
+                            e
+                        )
+
+                        val cepAtual = campoCep.text
+                            .toString()
+                            .filter { it.isDigit() }
+
+                        if (cepAtual == cep) {
+
+                            ultimoCepConsultado = null
+
+                            Toast.makeText(
+                                this@NovoOrcamentoActivity,
+                                "Falha ao consultar o CEP. Tente novamente.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
-
-                } catch (e: CancellationException) {
-                    throw e
-
-                } catch (e: Exception) {
-
-                    Log.e(
-                        "NovoOrcamentoActivity",
-                        "Falha ao consultar ViaCEP",
-                        e
-                    )
-
-                    Toast.makeText(
-                        this@NovoOrcamentoActivity,
-                        "Não foi possível consultar o CEP.",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                } finally {
-
-                    btnBuscar.isEnabled = true
                 }
             }
-        }
+
+            override fun afterTextChanged(s: android.text.Editable?) {}
+
+        })
     }
+
 }

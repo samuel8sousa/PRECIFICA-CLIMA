@@ -219,23 +219,13 @@
                 android:id="@+id/edtCep"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Digite o CEP (8 dígitos)"
+                android:layout_marginTop="12dp"
+                android:hint="CEP do cliente"
                 android:inputType="number"
                 android:maxLength="8"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_secondary"/>
 
-            <!-- BOTÃO DE CONSULTA VIACEP -->
-
-            <Button
-                android:id="@+id/btnBuscarCep"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:text="Buscar endereço"
-                android:textColor="@color/text_on_teal"
-                android:backgroundTint="@color/primary_teal"/>
 
             <!-- INFORMAÇÕES DO ENDEREÇO -->
 

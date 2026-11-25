@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Relatório mensal"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"/>
+
+        <!-- Navegação entre meses -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/btnMesAnterior"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Anterior"/>
+
+            <TextView
+                android:id="@+id/txtMesSelecionado"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Novembro de 2026"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"/>
+
+            <Button
+                android:id="@+id/btnProximoMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Próximo"/>
+
+        </LinearLayout>
+
+        <!-- Total recebido -->
+        <TextView
+            android:id="@+id/txtTotalRecebido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_card"
+            android:text="Total recebido: R$ 0,00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_teal"/>
+
+        <!-- Custos -->
+        <TextView
+            android:id="@+id/txtCustosEstimados"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_card"
+            android:text="Custos: R$ 0,00"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"/>
+
+        <!-- Lucro -->
+        <TextView
+            android:id="@+id/txtLucroEstimado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_card"
+            android:text="Lucro estimado: R$ 0,00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_teal"/>
+
+        <!-- Serviços pagos -->
+        <TextView
+            android:id="@+id/txtServicosPagos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_card"
+            android:text="Serviços pagos: 0"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"/>
+
+        <!-- Orçamentos pendentes -->
+        <TextView
+            android:id="@+id/txtOrcamentosPendentes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_card"
+            android:text="Orçamentos pendentes: 0"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"/>
+
+        <TextView
+            android:id="@+id/txtValorPendente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_card"
+            android:text="Valor pendente: R$ 0,00"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"/>
+
+    </LinearLayout>
+
+</ScrollView>

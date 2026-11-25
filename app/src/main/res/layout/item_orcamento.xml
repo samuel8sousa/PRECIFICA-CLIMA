@@ -95,4 +95,15 @@
         android:textSize="13sp"
         android:textColor="@android:color/white"
         android:backgroundTint="#B3261E"/>
+
+
+    <Button
+        android:id="@+id/btnMarcarRecebido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Marcar como recebido"
+        android:backgroundTint="@color/primary_teal"
+        android:textColor="@color/text_on_primary"/>
+
 </LinearLayout>

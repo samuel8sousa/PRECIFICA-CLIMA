@@ -15,7 +15,8 @@ data class OrcamentoResumo(
     val id: Long,
     val cliente: String,
     val servico: String,
-    val valor: String
+    val valor: String,
+    val recebido: Boolean
 )
 
 class OrcamentoAdapter(
@@ -23,7 +24,8 @@ class OrcamentoAdapter(
     private val onEditarClick: (Long) -> Unit,
     private val onRotaClick: (Long) -> Unit,
     private val onCompartilharClick: (Long) -> Unit,
-    private val onExcluirClick: (Long) -> Unit
+    private val onExcluirClick: (Long) -> Unit,
+    private val onRecebimentoClick: (Long, Boolean) -> Unit
 ) : RecyclerView.Adapter<OrcamentoAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) :
@@ -49,6 +51,9 @@ class OrcamentoAdapter(
 
         val btnExcluir: Button =
             view.findViewById(R.id.btnExcluir)
+
+        val btnRecebimento: Button =
+            view.findViewById(R.id.btnMarcarRecebido)
     }
 
     override fun onCreateViewHolder(
@@ -78,24 +83,35 @@ class OrcamentoAdapter(
         holder.servico.text = orcamento.servico
         holder.valor.text = orcamento.valor
 
-        // Editar
         holder.btnEditar.setOnClickListener {
             onEditarClick(orcamento.id)
         }
 
-        // Google Maps
         holder.btnVerRota.setOnClickListener {
             onRotaClick(orcamento.id)
         }
 
-        // WhatsApp
         holder.btnCompartilhar.setOnClickListener {
             onCompartilharClick(orcamento.id)
         }
 
-        // Excluir
         holder.btnExcluir.setOnClickListener {
             onExcluirClick(orcamento.id)
+        }
+
+        // Atualizar texto conforme o pagamento
+        holder.btnRecebimento.text =
+            if (orcamento.recebido) {
+                "Desfazer recebimento"
+            } else {
+                "Marcar como recebido"
+            }
+
+        holder.btnRecebimento.setOnClickListener {
+            onRecebimentoClick(
+                orcamento.id,
+                orcamento.recebido
+            )
         }
     }
 
